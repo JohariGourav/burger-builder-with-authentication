@@ -1,0 +1,2 @@
+this project directory is a copy of burger-builder-with-redux-advanced directory before section18.
+this directory implements Authentication in app from  udemy section 18 - Adding Authentication to our Burger Project.

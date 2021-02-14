@@ -14,6 +14,7 @@ export const authStart = () => {
     };
 };
 export const authSuccess = (token, userId) => {
+    console.log("authSuccess dispatched");
     return {
         type: actionTypes.AUTH_SUCCESS,
         // authData: authData,
@@ -27,6 +28,22 @@ export const authFail = (error) => {
         error: error,
     };
 };
+
+export const logout = () => {
+    return {
+        type: actionTypes.AUTH_LOGOUT,
+    }
+}
+
+export const checkAuthTimeout = (expirationTime) => {
+    console.log("checkAuthTimeout dispatched");
+    return dispatch => {
+        setTimeout(() => {
+            dispatch(logout());
+        }, expirationTime * 1000);
+    };
+};
+
 export const auth = (email, password, isSignup) => {
     return dispatch => {
         // ... authenticate the user
@@ -44,10 +61,12 @@ export const auth = (email, password, isSignup) => {
             .then( response => {
                 console.log(response);
                 dispatch(authSuccess(response.data.idToken, response.data.localId));
+                dispatch(checkAuthTimeout(response.data.expiresIn));
             })
             .catch(err => {
                 console.log(err);
-                dispatch(authFail(err));
+                console.log("res eror in auth actions: ",err.response.data.error);
+                dispatch(authFail(err.response.data.error));
             })
     };
 };
